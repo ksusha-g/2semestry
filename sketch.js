@@ -87,31 +87,25 @@ function draw()
     gameObj.CollectableItem.forEach((item, ind) => (item.draw(), item.collection()));
     (character => (character.draw(), character.move()))(gameObj.Character);
     gameObj.Enemy.forEach((enemy, ind) => (enemy.draw(), enemy.death()));
-    sound()
     drawSound()
 }
 
-function sound()
+function keyPressed()
 {
-    if (keyIsDown(82)) // press r
+    if (!music && keyIsDown(82))
     {
-        if (!music)
-        {
-            backgroundAudio.volume = 0.2;
-            attackAudio.volume = 0.2;
-            canyonAudio.volume = 0.2;
-            music = true   
-        }
-        else
-        {
-            backgroundAudio.volume = 0;
-            attackAudio.volume = 0;
-            canyonAudio.volume = 0;
-            music = false
-        }
-          
-    } 
-
+        backgroundAudio.volume = 0.2;
+        attackAudio.volume = 0.2;
+        canyonAudio.volume = 0.2;
+        music = true
+    }
+    else if(music && keyIsDown(82)) 
+    {
+        backgroundAudio.volume = 0;
+        attackAudio.volume = 0;
+        canyonAudio.volume = 0;
+        music = false
+    }
 }
 
 function drawSound()
