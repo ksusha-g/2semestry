@@ -88,18 +88,18 @@ function draw()
     (character => (character.draw(), character.move()))(gameObj.Character);
     gameObj.Enemy.forEach((enemy, ind) => (enemy.draw(), enemy.death()));
     sound()
+    drawSound()
 }
 
 function sound()
 {
-    if (keyCode(82)) // press r
+    if (keyIsDown(82)) // press r
     {
         if (!music)
         {
             backgroundAudio.volume = 0.2;
             attackAudio.volume = 0.2;
             canyonAudio.volume = 0.2;
-            image = (musicOn, 300, 200);
             music = true   
         }
         else
@@ -107,12 +107,19 @@ function sound()
             backgroundAudio.volume = 0;
             attackAudio.volume = 0;
             canyonAudio.volume = 0;
-            image = (musicOff, 500, 700);   
             music = false
         }
           
     } 
 
+}
+
+function drawSound()
+{
+    if (!music)
+        image(musicOff, 0, 0, 20, 20); 
+    else
+        image(musicOn, 0, 0, 20, 20);
 }
 
 function mountain(x1, x2, x3, y1, y2, y3)
