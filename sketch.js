@@ -92,7 +92,7 @@ function draw()
 
 function sound()
 {
-    if (keyCode(82))
+    if (keyCode(82)) // press r
     {
         if (!music)
         {
