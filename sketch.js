@@ -628,6 +628,13 @@ function draw()
 } */
 
 
+var backgroundAudio = new Audio('assets/sound/background.mp3');
+var attackAudio = new Audio('assets/sound/attack.mp3');
+var canyonAudio = new Audio('assets/sound/canyon.mp3');
+let musicOn;
+let musicOff;
+let music;
+
 let player;
 let floor;
 let countCanyons = 7;
@@ -643,8 +650,22 @@ let basefloor = 200;
 let cameraX = 0; // Положение камеры по X
 let levelWidth = 5000; // Длина уровня
 
+function preload()
+{
+    musicOn = loadImage('/assets/image/on.jpg');
+    musicOff = loadImage('/assets/image/off.jpg');
+    music = true
+}
+
 function setup()
 {
+    backgroundAudio.volume = 0.2;
+    attackAudio.volume = 0.2;
+    canyonAudio.volume = 0.2;
+
+    soundSlider = createSlider(0, 255, 125);
+    soundSlider.position(40, 7);
+
     createCanvas(1024, 800);
     maxX = levelWidth - width;
     player = 
@@ -860,8 +881,35 @@ function setup()
     }
 }
 
+function keyPressed()
+{
+    if (!music && keyIsDown(82))
+    {
+        backgroundAudio.volume = 0.2;
+        attackAudio.volume = 0.2;
+        canyonAudio.volume = 0.2;
+        music = true
+    }
+    else if(music && keyIsDown(82)) 
+    {
+        backgroundAudio.volume = 0;
+        attackAudio.volume = 0;
+        canyonAudio.volume = 0;
+        music = false
+    }
+}
+
+function drawSound()
+{
+    if (!music)
+        image(musicOff, 0, 0, 30, 30); 
+    else
+        image(musicOn, 0, 0, 30, 30);
+}
+
 function draw() 
 {
+    backgroundAudio.play();
     background("#4da3ff");
     floor.drawFloor();
     let desiredCameraX = player.x - width / 2;
@@ -882,4 +930,6 @@ function draw()
     player.checkPlatform();
     player.gravity(floor);
     player.movement();
+    drawSound();
+    
 }
