@@ -85,7 +85,7 @@ function draw()
     gameObj.Clouds.forEach((cloud, ind) => (cloud.draw(), cloud.move()));
     gameObj.DangerSign.forEach(obj => obj.draw());
     gameObj.CollectableItem.forEach((item, ind) => (item.draw(), item.collection()));
-    (character => (character.draw(), character.move()))(gameObj.Character);
+    (character => (character.draw(), character.move(), character.deathFromEnemy()))(gameObj.Character);
     gameObj.Enemy.forEach((enemy, ind) => (enemy.draw(), enemy.death()));
     drawSound()
 }
@@ -351,7 +351,10 @@ function enemy(cordX, cordY, widh, lengh)
         point(this.x+4, this.y+4)
         
         if (this.enemyDefeated == true)
+        {
             point(this.x+4, this.y+4)
+            circle(this.x, 200, 100, 100)
+        }
     },
         
     this.death = function()
@@ -414,9 +417,6 @@ function character(cordX, cordY, radius, moveSpeed, constX, constY, constRadius,
             else
                 this.respawn();
         }
-        
-        else if (580 < this.x && gameObj.Enemy.enemyDefeated == false)
-            this.respawn();
         
         else
         {
@@ -537,6 +537,15 @@ function character(cordX, cordY, radius, moveSpeed, constX, constY, constRadius,
         fill("white");
         circle(this.x-40, this.y-40, 25); 
         attackAudio.play();
+    },
+
+    this.deathFromEnemy = function()
+    {
+       if (gameObj.Enemy.enemyDefeated == false)
+       {
+            fill('black')
+            circle(300, 200, 100, 100)
+       }     
     }
         
     return this;
