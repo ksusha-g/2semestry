@@ -629,7 +629,6 @@ function draw()
 
 
 var backgroundAudio = new Audio('assets/sound/background.mp3');
-var attackAudio = new Audio('assets/sound/attack.mp3');
 var canyonAudio = new Audio('assets/sound/canyon.mp3');
 let musicOn;
 let musicOff;
@@ -639,16 +638,15 @@ let player;
 let floor;
 let countCanyons = 7;
 let countPlatforms = 5;
-let countCheckpoints = 3;
 let canyons = [];
 let clouds = [];
-let countClouds = 30;
+let countClouds = 40;
 let platforms = [];
 let checkpoints = [];
 let onGrounded;
 let basefloor = 200;
 let cameraX = 0; // Положение камеры по X
-let levelWidth = 5000; // Длина уровня
+let levelWidth = 4000; // Длина уровня
 
 function preload()
 {
@@ -660,14 +658,12 @@ function preload()
 function setup()
 {
     backgroundAudio.volume = 0.2;
-    attackAudio.volume = 0.2;
     canyonAudio.volume = 0.2;
 
     soundSlider = createSlider(0, 255, 125);
     soundSlider.position(40, 7);
 
     createCanvas(1024, 800);
-    maxX = levelWidth - width;
     player = 
     {
         x: 100,
@@ -886,14 +882,12 @@ function keyPressed()
     if (!music && keyIsDown(82))
     {
         backgroundAudio.volume = 0.2;
-        attackAudio.volume = 0.2;
         canyonAudio.volume = 0.2;
         music = true
     }
     else if(music && keyIsDown(82)) 
     {
         backgroundAudio.volume = 0;
-        attackAudio.volume = 0;
         canyonAudio.volume = 0;
         music = false
     }
@@ -921,7 +915,7 @@ function draw()
         clouds[i].x += 0.5; 
         clouds[i].drawCloud(cameraX);
         if (clouds[i].x > levelWidth)
-        clouds[i].x = 0;
+            clouds[i].x = -300;
     }
     for (let i = 0; i < platforms.length; i++) 
         platforms[i].drawPlatform(cameraX);
@@ -931,5 +925,4 @@ function draw()
     player.gravity(floor);
     player.movement();
     drawSound();
-    
 }
