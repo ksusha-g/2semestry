@@ -632,7 +632,6 @@ var backgroundAudio = new Audio('assets/sound/background.mp3');
 var canyonAudio = new Audio('assets/sound/canyon.mp3');
 let musicOn;
 let musicOff;
-let music;
 
 let player;
 let floor;
@@ -643,10 +642,13 @@ let clouds = [];
 let countClouds = 40;
 let platforms = [];
 let checkpoints = [];
+let enemies = [];
+let countEnemies = 5; 
 let onGrounded;
 let basefloor = 200;
 let cameraX = 0; // Положение камеры по X
 let levelWidth = 4000; // Длина уровня
+let restartButton;
 
 function preload()
 {
@@ -657,10 +659,7 @@ function preload()
 
 function setup()
 {
-    backgroundAudio.volume = 0.2;
-    canyonAudio.volume = 0.2;
-
-    soundSlider = createSlider(0, 255, 125);
+    soundSlider = createSlider(0, 255, 0);
     soundSlider.position(40, 7);
 
     createCanvas(1024, 800);
@@ -765,9 +764,7 @@ function setup()
         },
         deadAnimation: function()
         {
-           this.x = 100; 
-           this.y = 100;
-           this.dead = false
+            
         },
 
         checkCanyon: function() {
@@ -777,12 +774,12 @@ function setup()
                 (
                     this.y + this.height >= height - floor.height && 
                     this.x >= canyons[i].x && 
-                    this.x + this.width <= canyons[i].x + canyons[i].width
+                    this.x + this.width <= canyons[i].x + canyons[i].width + 15
                 )
                 {
                     this.grounded = false;   
-                    this.dead = true;
-                    this.deadAnimation();   
+                    this.dead = true; 
+                    showRestartButton();
                 }
             }
         },
@@ -802,7 +799,26 @@ function setup()
                 return true; // Возвращаем true, если на платформе
             }
             return false; // Возвращаем false, если не на платформе
-},
+        },
+
+        checkEnemy: function()
+        {
+            for (let i = 0;  i < enemies.length; i++)
+            {
+                let enemy = enemies[i];
+                if
+                (
+                    this.x >= enemy.x &&
+                    this.x <= enemy.x + enemy.width + 20 &&
+                    this.y > enemy.y - enemy.width + 15
+                )
+                {
+                    this.dead = true;
+                    this.deadAnimation();
+                    showRestartButton();
+                }
+            }
+        }
     };
 
     floor = {
@@ -824,7 +840,7 @@ function setup()
         canyons.push
         (
             {
-                x: 250 + i * 400,
+                x: 250 + i * 600,
                 y: height-floor.height,
                 width: 100,
                 drawCanyon: function()
@@ -838,19 +854,21 @@ function setup()
 
     for (let i = 0; i < countPlatforms; i++) 
     {
-        platforms.push(
-        {
-            x: 300 + i * 500,
-            y: random(475, 500),
-            width: 80 + random(30),
-            height: 20,
-            color: color('white'),
-            drawPlatform: function() 
+        platforms.push
+        (
             {
-                fill(this.color);
-                rect(this.x- cameraX, this.y, this.width, this.height);
+                x: 300 + i * 500,
+                y: random(475, 500),
+                width: 100 + random(30),
+                height: 20,
+                color: color('white'),
+                drawPlatform: function() 
+                {
+                    fill(this.color);
+                    rect(this.x- cameraX, this.y, this.width, this.height);
+                }
             }
-        });
+        );
     }
 
     console.log(platforms)
@@ -875,30 +893,72 @@ function setup()
             }
         );
     }
-}
 
-function keyPressed()
-{
-    if (!music && keyIsDown(82))
+    for (let i = 0; i < countEnemies; i++)
     {
-        backgroundAudio.volume = 0.2;
-        canyonAudio.volume = 0.2;
-        music = true
-    }
-    else if(music && keyIsDown(82)) 
-    {
-        backgroundAudio.volume = 0;
-        canyonAudio.volume = 0;
-        music = false
+        enemies.push
+        (
+            {
+                x: canyons[i].x + random(100, 500),
+                y: 550, 
+                width: 50,
+                //moveSpeed: 4,
+                //borderL: canyons[i].x + random(6, 20),
+                //borderR: canyons[i+1].x - random(6, 20),
+                drawEnemy: function()
+                {
+                    noStroke();
+                    fill("white");
+                    rect(this.x-cameraX, this.y, this.width, this.width);
+                },
+
+                /*movementE: function()
+                {
+                    this.x += this.moveSpeed;
+                    if (this.x >= this.borderR)
+                        this.x = this.x - this.moveSpeed;
+                    if (this.x <= this.borderL)
+                        this.x = this.x + this.moveSpeed;
+                }*/
+            }
+        );
     }
 }
 
 function drawSound()
 {
-    if (!music)
+    if (backgroundAudio.volume == 0)
         image(musicOff, 0, 0, 30, 30); 
     else
         image(musicOn, 0, 0, 30, 30);
+}
+
+function changeVolumeSound()
+{
+    backgroundAudio.setVolume(soundSlider.value());
+    canyonAudio.setVolume(soundSlider.value());
+}
+
+function showRestartButton() 
+{
+    if (restartButton) 
+        restartButton.remove();
+    restartButton = createButton('restart');
+    restartButton.position(width / 2 - 50, height / 2);
+    restartButton.style('font-size', '20px'); // increase font size
+    restartButton.style('padding', '10px 20px'); // padding for a larger button
+    restartButton.style('background-color', 'white'); // background color
+    restartButton.style('color', '0'); // text color
+    restartButton.mousePressed(restartGame);
+}
+
+function restartGame() 
+{
+    player.x = 100;
+    player.y = 100;
+    player.dead = false;
+
+    restartButton.remove();
 }
 
 function draw() 
@@ -906,8 +966,7 @@ function draw()
     backgroundAudio.play();
     background("#4da3ff");
     floor.drawFloor();
-    let desiredCameraX = player.x - width / 2;
-    cameraX = desiredCameraX;
+    cameraX = player.x - width / 2;
     for (let i = 0; i < canyons.length; i++)
         canyons[i].drawCanyon(cameraX);
     for (let i = 0; i < clouds.length; i++)
@@ -919,10 +978,20 @@ function draw()
     }
     for (let i = 0; i < platforms.length; i++) 
         platforms[i].drawPlatform(cameraX);
+    for (let i = 0; i < countEnemies; i++)
+    {
+        enemies[i].drawEnemy(cameraX)
+        //enemies[i].movementE(cameraX)
+    }
+        
     player.drawPlayer(cameraX);
     player.checkCanyon();
     player.checkPlatform();
+    player.checkEnemy();
     player.gravity(floor);
     player.movement();
+
     drawSound();
+    backgroundAudio.volume = soundSlider.value() / 255;
+    canyonAudio.volume = soundSlider.value() / 255
 }
