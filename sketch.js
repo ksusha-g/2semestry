@@ -636,7 +636,7 @@ let musicOff;
 let player;
 let floor;
 let countCanyons = 7;
-let countPlatforms = 5;
+let countPlatforms = 7;
 let canyons = [];
 let clouds = [];
 let countClouds = 40;
