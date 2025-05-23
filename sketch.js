@@ -196,6 +196,16 @@ function setup()
                 (
                     this.x >= enemy.x &&
                     this.x <= enemy.x + enemy.width + 20 &&
+                    this.grounded == false &&
+                    this.y > enemy.y - enemy.width + 15
+                    
+                )
+                    enemy.y = 900;
+
+                else if 
+                (
+                    this.x >= enemy.x &&
+                    this.x <= enemy.x + enemy.width + 20 &&
                     this.y > enemy.y - enemy.width + 15
                 )
                 {
@@ -271,8 +281,8 @@ function setup()
                 {
                     strokeWeight(1);
                     stroke(1);
-                    fill("yellow")
-                    ellipse(this.x-cameraX, this.y, this.r, this.r)
+                    fill("yellow");
+                    ellipse(this.x-cameraX, this.y, this.r, this.r);
                 }
             }
         );
@@ -292,10 +302,10 @@ function setup()
                 {
                     noStroke()
                     fill("white");
-                    ellipse(this.x - cameraX, this.y, this.r, this.r)
-                    ellipse(this.x+this.r- cameraX, this.y, this.r, this.r)
-                    ellipse(this.x+this.r/2- cameraX, this.y-this.r/2, this.r, this.r)
-                    rect(this.x- cameraX, this.y, this.r, this.r/2)
+                    ellipse(this.x - cameraX, this.y, this.r, this.r);
+                    ellipse(this.x+this.r- cameraX, this.y, this.r, this.r);
+                    ellipse(this.x+this.r/2- cameraX, this.y-this.r/2, this.r, this.r);
+                    rect(this.x- cameraX, this.y, this.r, this.r/2);
                 }
             }
         );
@@ -306,6 +316,7 @@ function setup()
         enemies.push
         (
             {
+                posY: 550,
                 x: canyons[i].x + random(100, 500),
                 y: 550, 
                 width: 50,
@@ -321,8 +332,8 @@ function setup()
                     rect(this.x-cameraX, this.y, this.width, this.width);
                     strokeWeight(7);
                     stroke(0);
-                    point(this.x + this.width/4 - cameraX, this.y + this.width/2)
-                    point(this.x + this.width*0.75 - cameraX, this.y + this.width/2)
+                    point(this.x + this.width/4 - cameraX, this.y + this.width/2);
+                    point(this.x + this.width*0.75 - cameraX, this.y + this.width/2);
                 },
 
                 movementE: function()
@@ -376,6 +387,8 @@ function restartGame()
     player.dead = false;
     for (let i = 0; i < collectableItems.length; i++)
         collectableItems[i].y = collectableItems[i].posY;
+    for (let i = 0; i < enemies.length; i++)
+        enemies[i].y = enemies[i].posY;
 
     restartButton.remove();
 }
@@ -393,7 +406,7 @@ function draw()
         clouds[i].x += 0.5; 
         clouds[i].drawCloud(cameraX);
         if (clouds[i].x > levelWidth)
-            clouds[i].x = -300;
+            clouds[i].x = -400;
     }
     for (let i = 0; i < platforms.length; i++) 
         platforms[i].drawPlatform(cameraX);
