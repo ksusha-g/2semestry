@@ -264,7 +264,7 @@ function setup()
             {
                 r: 40,
                 posY: platforms[i].y - platforms[i].height - 120,
-                x: platforms[i].x + random(50, 100),
+                x: platforms[i].x + random(30, 100),
                 y: platforms[i].y - platforms[i].height - 120,
                 
                 drawCollectable: function()
@@ -309,24 +309,33 @@ function setup()
                 x: canyons[i].x + random(100, 500),
                 y: 550, 
                 width: 50,
-                //moveSpeed: 4,
-                //borderL: canyons[i].x + random(6, 20),
-                //borderR: canyons[i+1].x - random(6, 20),
+                moveSpeed: 3,
+                borderL: canyons[i].x + random(100, 160),
+                borderR: canyons[i].x + random(400, 500),
+                direction: 1,
                 drawEnemy: function()
                 {
-                    noStroke();
+                    strokeWeight(2);
+                    stroke(0);
                     fill("white");
                     rect(this.x-cameraX, this.y, this.width, this.width);
+                    strokeWeight(7);
+                    stroke(0);
+                    point(this.x + this.width/4 - cameraX, this.y + this.width/2)
+                    point(this.x + this.width*0.75 - cameraX, this.y + this.width/2)
                 },
 
-                /*movementE: function()
+                movementE: function()
                 {
-                    this.x += this.moveSpeed;
-                    if (this.x >= this.borderR)
-                        this.x = this.x - this.moveSpeed;
-                    if (this.x <= this.borderL)
-                        this.x = this.x + this.moveSpeed;
-                }*/
+                    if (this.x > this.borderR)
+                    {
+                        this.direction = -1;
+                    }
+                    else if (this.x < this.borderL)
+                        this.direction = 1;
+
+                    this.x += (this.moveSpeed * this.direction)
+                }
             }
         );
     }
@@ -393,7 +402,7 @@ function draw()
     for (let i = 0; i < countEnemies; i++)
     {
         enemies[i].drawEnemy(cameraX)
-        //enemies[i].movementE(cameraX)
+        enemies[i].movementE(cameraX)
     }
         
     player.drawPlayer(cameraX);
