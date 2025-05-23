@@ -1,5 +1,6 @@
 var backgroundAudio = new Audio('assets/sound/background.mp3');
 var canyonAudio = new Audio('assets/sound/canyon.mp3');
+var coinAudio = new Audio('assets/sound/coin.mp3');
 let musicOn;
 let musicOff;
 
@@ -26,7 +27,7 @@ function preload()
 {
     musicOn = loadImage('/assets/image/on.jpg');
     musicOff = loadImage('/assets/image/off.jpg');
-    music = true
+    music = true;
 }
 
 function setup()
@@ -173,6 +174,19 @@ function setup()
             return false; // Возвращаем false, если не на платформе
         },
 
+        checkCollectable: function()
+        {
+            for (let i = 0; i < countCI; i++)
+            {
+                let item = collectableItems[i];
+                if (this.x >= (item.x - 40) && this.y < item.y + 40)
+                {
+                    item.y = -100;
+                    coinAudio.play();
+                }
+            }
+        },
+
         checkEnemy: function()
         {
             for (let i = 0;  i < enemies.length; i++)
@@ -249,6 +263,7 @@ function setup()
         (
             {
                 r: 40,
+                posY: platforms[i].y - platforms[i].height - 120,
                 x: platforms[i].x + random(50, 100),
                 y: platforms[i].y - platforms[i].height - 120,
                 
@@ -329,18 +344,19 @@ function changeVolumeSound()
 {
     backgroundAudio.setVolume(soundSlider.value());
     canyonAudio.setVolume(soundSlider.value());
+    coinAudio.setVolume(soundSlider.value());
 }
 
 function showRestartButton() 
 {
     if (restartButton) 
         restartButton.remove();
-    restartButton = createButton('restart');
+    restartButton = createButton('wanna play again?');
     restartButton.position(width / 2 - 50, height / 2);
-    restartButton.style('font-size', '20px'); // increase font size
-    restartButton.style('padding', '10px 20px'); // padding for a larger button
-    restartButton.style('background-color', 'white'); // background color
-    restartButton.style('color', '0'); // text color
+    restartButton.style('font-size', '25px');
+    restartButton.style('padding', '10px 20px');
+    restartButton.style('background-color', 'white'); 
+    restartButton.style('color', '0'); 
     restartButton.mousePressed(restartGame);
 }
 
@@ -349,6 +365,8 @@ function restartGame()
     player.x = 100;
     player.y = 100;
     player.dead = false;
+    for (let i = 0; i < collectableItems.length; i++)
+        collectableItems[i].y = collectableItems[i].posY;
 
     restartButton.remove();
 }
@@ -381,11 +399,13 @@ function draw()
     player.drawPlayer(cameraX);
     player.checkCanyon();
     player.checkPlatform();
+    player.checkCollectable();
     player.checkEnemy();
     player.gravity(floor);
     player.movement();
 
     drawSound();
     backgroundAudio.volume = soundSlider.value() / 255;
-    canyonAudio.volume = soundSlider.value() / 255
+    canyonAudio.volume = soundSlider.value() / 255;
+    coinAudio.volume = soundSlider.value() / 255;
 }
