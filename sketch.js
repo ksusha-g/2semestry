@@ -21,8 +21,8 @@ let countCI = 8;
 let onGrounded;
 let basefloor = 200;
 let cameraX = 0; // Положение камеры по X
-let rightBorder = 4000; // Шраница уровня право
-let leftBorder = 0;   // ДГраница уровня лево
+let rightBorder = 4000; // Граница уровня право
+let leftBorder = 0;   // Граница уровня лево
 let restartButton;
 let gamePaused = false;
 
@@ -225,7 +225,7 @@ function setup()
         },
     }  
 
-    for(let i = 0; i < countCanyons; i++)
+    for (let i = 0; i < countCanyons; i++)
     {
         canyons.push
         (
@@ -282,8 +282,6 @@ function setup()
             }
         );
     }
-
-    console.log(platforms)
 
     for (let i = 0; i < countClouds; i++)
     {
