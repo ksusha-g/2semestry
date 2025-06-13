@@ -18,10 +18,12 @@ let enemies = [];
 let countEnemies = 6; 
 let collectableItems = [];
 let countCI = 8;
+let counterCI = 0;
+let counterE = countEnemies;
 let onGrounded;
 let basefloor = 200;
 let cameraX = 0; // Положение камеры по X
-let rightBorder = 4000; // Граница уровня право
+let rightBorder = 4500; // Граница уровня право
 let leftBorder = 0;   // Граница уровня лево
 let restartButton;
 let gamePaused = false;
@@ -174,9 +176,10 @@ function setup()
             for (let i = 0; i < countCI; i++)
             {
                 let item = collectableItems[i];
-                if (this.x >= (item.x - 40) && this.y < item.y + 40)
+                if (this.x >= (item.x - 40) && this.y < item.y + 40 && this.x <= (item.x+40))
                 {
                     item.y = -100;
+                    counterCI += 1;
                     coinAudio.play();
                 }
             }
@@ -195,7 +198,11 @@ function setup()
                     this.y > enemy.y - enemy.width + 15
                     
                 )
+                {
                     enemy.y = 900;
+                    counterE -= 1;
+                    canyonAudio.play();
+                }  
 
                 else if 
                 (
@@ -395,12 +402,22 @@ function drawIgloo()
     stroke(0);
     strokeWeight(1);
     fill("white");
-    ellipse(-150-cameraX, 600, 300, 400);
+    ellipse(-400-cameraX, 600, 300, 400);
     fill("#87CEEB");
-    ellipse(-150-cameraX, 600, 70, 140);
+    ellipse(-400-cameraX, 600, 70, 140);
     fill(10, 100, 10);
     noStroke();
-    rect(-400-cameraX, 600, 450, 400);
+    rect(-550-cameraX, 600, 450, 400);
+
+    stroke(0);
+    strokeWeight(1);
+    fill("white");
+    ellipse(rightBorder-cameraX, 600, 300, 400);
+    fill("#87CEEB");
+    ellipse(rightBorder-cameraX, 600, 70, 140);
+    fill(10, 100, 10);
+    noStroke();
+    rect(rightBorder-cameraX-300, 600, 450, 400);
 }
 
 function drawSound()
@@ -443,16 +460,18 @@ function restartGame()
 
     restartButton.remove();
     gamePaused = false;
+    counterCI = 0;
+    counterE = 6;
 }
 
 function keyPressed()
 {
-    if (!gamePaused && key == "p")
+    if (!gamePaused && keyIsDown(80))
     {
         showRestartButton();
         gamePaused = true;
     }
-    else if (gamePaused && key == "p")
+    else if (gamePaused && keyIsDown(80))
     {
         restartButton.remove();
         gamePaused = false;
@@ -465,12 +484,23 @@ function showSoundSlider()
     if (gamePaused) 
     { 
         soundSlider.position(530, 350); 
-        stroke(0);
+        stroke("#7dc4fa");
         strokeWeight(3);
-        fill("grey");
+        fill("#afdafc");
         rect(385, 225, 400, 300);
     }
     else { soundSlider.position(-1000, 7); }
+}
+
+function counter()
+{
+    textSize(25);
+	fill(255);
+	stroke(0);
+    text("Coins:", 10, 60);
+    text(counterCI, 90, 60);
+    text("Enemies to beat:", 10, 80);
+    text(counterE, 210, 80)
 }
 
 function draw() 
@@ -499,6 +529,7 @@ function draw()
     }
 
     drawIgloo();
+    counter();
     player.drawPlayer(cameraX);
     player.checkCanyon();
     player.checkPlatform();
