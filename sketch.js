@@ -413,12 +413,49 @@ function drawIgloo()
     strokeWeight(1);
     fill("white");
     ellipse(rightBorder-cameraX, 600, 300, 400);
-    fill("#87CEEB");
+    fill("#fa9de1");
     ellipse(rightBorder-cameraX, 600, 70, 140);
     fill(10, 100, 10);
     noStroke();
-    rect(rightBorder-cameraX-300, 600, 450, 400);
+    rect(rightBorder-cameraX-300, 600, 450, 400); 
+
+    strokeWeight(1);
+    stroke(0);
+    fill("white");
+    circle(rightBorder - cameraX-50, 575+1, 55);
+    circle(rightBorder - cameraX-50, 575-30, 55-15);
+    circle(rightBorder - cameraX-50, 575-57, 55-25);
+    strokeWeight(4);
+    stroke(0);
+    point(rightBorder - cameraX-50, 575-20);
+    point(rightBorder - cameraX-50, 575-37);
+    point(rightBorder - cameraX-9-50, 575-58);
+    point(rightBorder - cameraX+9-50, 575-58);
+    point(rightBorder - cameraX-50, 575);
+    strokeWeight(4);
+    stroke('#ffa500');
+    point(rightBorder - cameraX-50, 575-53);
+    fill("#fccff0");
+    strokeWeight(1);
+    stroke("#fccff0");
+    ellipse(rightBorder-cameraX-50, 575-74, 5, 10);
+    triangle(rightBorder-1-cameraX-50, 500, rightBorder-11-cameraX-50, 510, rightBorder-11-cameraX-50, 490);
+    triangle(rightBorder+1-cameraX-50, 500, rightBorder+11-cameraX-50, 510, rightBorder+11-cameraX-50, 490);
+    if (counterCI == 8 && counterE == 0)
+    {
+        fill("#fccff0")
+        rect(rightBorder - cameraX - 235, 450, 260, 30);
+        fill(0);
+        text("You are my hero <3!!",rightBorder - cameraX - 220, 475); 
+    }
+    else {
+        fill("#fccff0")
+        rect(rightBorder - cameraX - 235, 450, 180, 30);
+        fill(0);
+        text("Save meee!!",rightBorder - cameraX - 220, 475);
+    }
 }
+
 
 function drawSound()
 {
